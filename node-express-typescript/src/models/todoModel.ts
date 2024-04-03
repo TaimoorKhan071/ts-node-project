@@ -5,7 +5,7 @@ const todoSchema = new Schema({
   text: {
     type: String,
     required: true,
-  } 
+  },
 });
 
 export const todo = mongoose.model("todo", todoSchema);

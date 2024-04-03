@@ -22,3 +22,32 @@ export const getTodoById = async (req: Request, res: Response) => {
     console.log(err);
   }
 };
+
+export const createTodo = async (req: Request, res: Response) => {
+  try {
+    const { text } = req.body;
+
+    if (!text || text.length < 10) {
+      throw new Error("Text size less than 10!");
+    }
+
+    const todoItem = new todo({
+      text: text,
+    });
+    await todoItem.save();
+
+    res.status(201).json({
+      created: true,
+      todo: todoItem,
+    });
+  } catch (err: any) {
+    
+    console.log(err);
+
+    res.json({
+      created: false,
+      todo: null,
+      error: err.message,
+    });
+  }
+};
