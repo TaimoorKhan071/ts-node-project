@@ -14,7 +14,7 @@ export const getTodoById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const result = await todo.findById(id);
-    if (!id) {
+    if (!result) {
       console.log("Todo Item does not exist");
     }
     res.json({ todo: result });
