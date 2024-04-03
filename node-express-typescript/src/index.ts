@@ -2,6 +2,7 @@ import express, { Request, Response, Application } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { connectMongoDB } from "./config/db";
+import todoRouter from "./routes/todo.routes";
 
 dotenv.config();
 
@@ -12,12 +13,12 @@ app.use(express.json());
 app.use(cors());
 
 // routes
-// app.use(todoRouter)
-
+app.use(todoRouter);
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Express & TypeScript Server");
 });
 
+// main
 const initServer = async () => {
   try {
     await connectMongoDB();
@@ -31,3 +32,4 @@ const initServer = async () => {
 };
 
 initServer();
+
