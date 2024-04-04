@@ -18,7 +18,7 @@ export const getTodoById = async (req: Request, res: Response) => {
     const result = await todo.findById(id);
 
     if (!result) {
-      console.log("Todo Item does not exist");
+      throw new Error("Todo Item does not exist")
     }
     res.json({ todo: result });
   } catch (err) {
@@ -35,8 +35,6 @@ export const deleteTodo = async (req: Request, res: Response) => {
     if (!deleteTodo) {
       throw new Error("TodoItem not found");
     }
-
-    // await deleteTodo.deleteOne();
 
     res.json({
       deleted: true,
