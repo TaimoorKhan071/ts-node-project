@@ -23,36 +23,33 @@ export const getTodoById = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteTodo = async (req:Request, res: Response) => {
+export const deleteTodo = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id;
-    const deletedTodo = await todo.findByIdAndDelete(id);
+    const deleteTodo = await todo.findByIdAndDelete(req.params.id);
 
-    if (deletedTodo) {
-      // Check if the item was found and deleted
-      res.json({
-        deleted: true,
-        todo: deletedTodo,
-      });
-    } else {
-      res.status(404).json({
-        // Use a 404 status code to indicate item not found
-        deleted: false, // Indicate deletion was not successful
-        todo: null,
-      });
+    if (!deleteTodo) {
+      throw new Error("TodoItem not found");
     }
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
+
+    // await deleteTodo.deleteOne();
+
+    res.json({
+      deleted: true,
+      todo: deleteTodo,
+    });
+  } catch (err: any) {
+    res.json({
       deleted: false,
       todo: null,
+      error: err.message,
     });
   }
 };
+
 export const updateTodo = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id;
-    const updates = req.body;
+    const { id } = req.params;
+    const { text } = req.body;
 
     // Update the todo item with the provided data
     const todoItem = await todo.findById(id);
@@ -61,23 +58,22 @@ export const updateTodo = async (req: Request, res: Response) => {
     }
 
     // Update the todo item with the provided data
-    todoItem.text = updates.text;
+    todoItem.text = text;
     await todoItem.save();
 
     res.json({
       updated: true,
       todo: todoItem,
     });
-  } catch (err: any) {
+  } catch (err) {
     console.log(err);
     res.json({
       updated: false,
       todo: null,
-      error: err.message,
+      error: (err as { message: string }).message,
     });
   }
 };
-
 
 export const createTodo = async (req: Request, res: Response) => {
   try {
@@ -97,7 +93,6 @@ export const createTodo = async (req: Request, res: Response) => {
       todo: todoItem,
     });
   } catch (err: any) {
-    
     console.log(err);
 
     res.json({
