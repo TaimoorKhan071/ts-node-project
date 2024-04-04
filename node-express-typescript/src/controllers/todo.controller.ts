@@ -6,7 +6,9 @@ export const getTodos = async (_: Request, res: Response) => {
     const result = await todo.find();
     res.json({ todos: result });
   } catch (err) {
-    console.log(err);
+    res.json({
+      error: (err as { message: string }).message,
+    });
   }
 };
 
@@ -14,12 +16,15 @@ export const getTodoById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const result = await todo.findById(id);
+
     if (!result) {
       console.log("Todo Item does not exist");
     }
     res.json({ todo: result });
   } catch (err) {
-    console.log(err);
+    res.json({
+      error: (err as { message: string }).message,
+    });
   }
 };
 
@@ -37,11 +42,11 @@ export const deleteTodo = async (req: Request, res: Response) => {
       deleted: true,
       todo: deleteTodo,
     });
-  } catch (err: any) {
+  } catch (err) {
     res.json({
       deleted: false,
       todo: null,
-      error: err.message,
+      error: (err as { message: string }).message,
     });
   }
 };
@@ -92,13 +97,11 @@ export const createTodo = async (req: Request, res: Response) => {
       created: true,
       todo: todoItem,
     });
-  } catch (err: any) {
-    console.log(err);
-
+  } catch (err) {
     res.json({
       created: false,
       todo: null,
-      error: err.message,
+      error: (err as { message: string }).message,
     });
   }
 };
