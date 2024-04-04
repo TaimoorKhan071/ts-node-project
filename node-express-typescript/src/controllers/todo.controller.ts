@@ -23,6 +23,32 @@ export const getTodoById = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteTodo = async (req:Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const deletedTodo = await todo.findByIdAndDelete(id);
+
+    if (deletedTodo) {
+      // Check if the item was found and deleted
+      res.json({
+        deleted: true,
+        todo: deletedTodo,
+      });
+    } else {
+      res.status(404).json({
+        // Use a 404 status code to indicate item not found
+        deleted: false, // Indicate deletion was not successful
+        todo: null,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      deleted: false,
+      todo: null,
+    });
+  }
+};
 export const updateTodo = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
